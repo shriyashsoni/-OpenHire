@@ -1,12 +1,12 @@
 <div align="center">
   <br />
   <a href="https://github.com/shriyashsoni/-OpenHire" target="_blank">
-    <img src="https://img.shields.io/badge/OpenHire-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="OpenHire Logo" />
+    <img src="./openhire-logo.png" alt="OpenHire Logo" width="280" />
   </a>
   <br />
   <br />
 
-  <h1>OpenHire Platform Architecture</h1>
+  <h1>OpenHire — Open Source HR Platform</h1>
   
   <p>
     An enterprise-grade, highly customizable, open-source Applicant Tracking System (ATS) and Career Portal designed specifically for modern startups.
