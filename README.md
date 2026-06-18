@@ -134,6 +134,38 @@ To access the backend management portal, navigate to `http://localhost:5173/admi
 
 ---
 
+## 🤖 AI Auto-Branding Pipeline (New!)
+
+We've introduced a powerful **Auto-Branding Python Pipeline** (`auto_brand_pipeline.py`) that acts as an intelligent wrapper around the CLI. It can scan an existing company's website repository, automatically extract their branding (Company Name, Tagline, URL, Contact Email, Primary Color, and Logo), and feed it directly into the CLI to generate a matching career page instantly.
+
+### How to use the Python Pipeline:
+```bash
+python auto_brand_pipeline.py <path-to-target-repo> --output-dir <your-new-career-page>
+```
+
+### 🧠 Prompt for AI Agents
+If you are using an AI Agent (like Claude, ChatGPT, or Cursor) to set up this repository for you, you can give it the following prompt to completely automate the white-labeling process:
+
+\`\`\`markdown
+We are using the \`create-open-hire\` CLI to generate a custom, open-source HR and Careers platform. 
+Please act as an autonomous developer and do the following:
+
+1. Run the Python Auto-Brand pipeline or the CLI tool: \`npx create-open-hire my-hr-platform\`
+2. The CLI will ask for configuration details. Please provide the following details automatically:
+   - Company Name: [Insert Target Company Name]
+   - Company Tagline/Mission: [Insert Target Company Tagline]
+   - Website URL: [Insert Target Website URL]
+   - Primary Brand Color: [Insert Hex Code]
+   - Support/Contact Email: [Insert Support Email]
+3. After the CLI finishes generating the codebase, navigate to the \`public/\` and root folders and replace \`logo.jpg\`, \`logo.png\`, and \`logo.svg\` with the actual logo files of [Target Company].
+4. Run \`npm install\` and \`npx convex dev\` to initialize the clean, 0-job database.
+5. Provide me with the link to the Admin Panel so I can start adding our own jobs manually.
+
+Ensure no data, jobs, or branding from the original creator remains. The final product must be 100% white-labeled for [Target Company].
+\`\`\`
+
+---
+
 ## 👨‍💻 Created & Maintained By
 
 <div align="center">

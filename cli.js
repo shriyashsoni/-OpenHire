@@ -11,13 +11,18 @@ program
   .version('1.0.0')
   .description('Create a modern HR platform and career page for your startup.')
   .argument('[project-directory]', 'The directory to create the project in')
-  .action((projectDirectory) => {
-    run(projectDirectory);
+  .option('--company-name <name>', 'Your company name')
+  .option('--company-tagline <tagline>', 'Your company tagline or mission statement')
+  .option('--website-url <url>', 'Your main website URL')
+  .option('--primary-color <color>', 'Your primary brand color (hex)')
+  .option('--contact-email <email>', 'Your support/contact email address')
+  .action((projectDirectory, options) => {
+    run(projectDirectory, options);
   });
 
 program.parse(process.argv);
 
-async function run(projectDirectory) {
+async function run(projectDirectory, options) {
   let directory = projectDirectory;
 
   if (!directory) {
@@ -39,32 +44,62 @@ async function run(projectDirectory) {
     process.exit(1);
   }
 
-  const answers = await inquirer.prompt([
-    {
+  const prompts = [];
+  
+  if (!options.companyName) {
+    prompts.push({
       type: 'input',
       name: 'companyName',
       message: 'What is your company name?',
       default: 'OpenHire',
-    },
-    {
+    });
+  }
+  
+  if (!options.companyTagline) {
+    prompts.push({
+      type: 'input',
+      name: 'companyTagline',
+      message: 'What is your company tagline or mission statement?',
+      default: 'Join our team and help us build amazing products.',
+    });
+  }
+  
+  if (!options.websiteUrl) {
+    prompts.push({
       type: 'input',
       name: 'websiteUrl',
       message: 'What is your main website URL?',
       default: 'https://openhire.shriyashsoni.social/',
-    },
-    {
+    });
+  }
+  
+  if (!options.primaryColor) {
+    prompts.push({
       type: 'input',
       name: 'primaryColor',
       message: 'What is your primary brand color (hex)?',
       default: '#5d3c98',
-    },
-    {
+    });
+  }
+  
+  if (!options.contactEmail) {
+    prompts.push({
       type: 'input',
       name: 'contactEmail',
       message: 'What is your support/contact email address?',
       default: 'hello@openhire.dev',
-    }
-  ]);
+    });
+  }
+
+  const promptedAnswers = prompts.length > 0 ? await inquirer.prompt(prompts) : {};
+  
+  const answers = {
+    companyName: options.companyName || promptedAnswers.companyName,
+    companyTagline: options.companyTagline || promptedAnswers.companyTagline,
+    websiteUrl: options.websiteUrl || promptedAnswers.websiteUrl,
+    primaryColor: options.primaryColor || promptedAnswers.primaryColor,
+    contactEmail: options.contactEmail || promptedAnswers.contactEmail,
+  };
 
   const spinner = ora('Setting up your HR Platform...').start();
 
@@ -136,6 +171,10 @@ async function run(projectDirectory) {
 
             // Replacements
             content = content.replace(/OpenHire/gi, answers.companyName);
+            content = content.replace(/Join OpenHire and be part of the mission to democratize expert career guidance for students everywhere\./gi, answers.companyTagline);
+            content = content.replace(/democratize expert career guidance for students everywhere/gi, answers.companyTagline);
+            content = content.replace(/Guiding futures, one student at a time\. The premier platform for expert career counseling\./gi, answers.companyTagline);
+            content = content.replace(/OpenHire is an education company working to provide expert counseling to students everywhere\. Explore our open positions and join our team\./gi, answers.companyTagline);
             content = content.replace(/https:\/\/openhire\.dev\//gi, answers.websiteUrl.endsWith('/') ? answers.websiteUrl : answers.websiteUrl + '/');
             content = content.replace(/https:\/\/openhire\.dev/gi, answers.websiteUrl);
             content = content.replace(/openhire\.dev/gi, answers.websiteUrl.replace(/^https?:\/\//, ''));
@@ -182,6 +221,7 @@ async function run(projectDirectory) {
     console.log(chalk.cyan(`  npm install`));
     console.log(chalk.cyan(`  npx convex dev`));
     console.log(chalk.cyan(`  npm run dev`));
+    console.log(`\n${chalk.yellow('Important: Don\\'t forget to replace the logo.jpg, logo.png, and logo.svg files with your own company logo!')}\n`);
 
   } catch (err) {
     spinner.fail('Failed to setup HR Platform');
