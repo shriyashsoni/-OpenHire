@@ -12,6 +12,10 @@
     An enterprise-grade, highly customizable, open-source Applicant Tracking System (ATS) and Career Portal designed specifically for modern startups.
   </p>
 
+  <p align="center">
+    <a href="https://openhire.shriyashsoni.social/"><strong>🌍 Visit the Official Website</strong></a>
+  </p>
+
   <p>
     <a href="https://github.com/shriyashsoni/-OpenHire/stargazers"><img src="https://img.shields.io/github/stars/shriyashsoni/-OpenHire?style=for-the-badge&color=e3b341&logo=github" alt="Stars"></a>
     <a href="https://github.com/shriyashsoni/-OpenHire/network/members"><img src="https://img.shields.io/github/forks/shriyashsoni/-OpenHire?style=for-the-badge&color=347d39&logo=github" alt="Forks"></a>

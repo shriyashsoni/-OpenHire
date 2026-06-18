@@ -50,7 +50,7 @@ async function run(projectDirectory) {
       type: 'input',
       name: 'websiteUrl',
       message: 'What is your main website URL?',
-      default: 'https://openhire.dev',
+      default: 'https://openhire.shriyashsoni.social/',
     },
     {
       type: 'input',
