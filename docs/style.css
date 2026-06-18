@@ -13,9 +13,9 @@ nav img{height:36px}
 .nav-links{display:flex;gap:28px;align-items:center}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .2s}
 .nav-links a:hover{color:var(--fg)}
-.gh-btn{display:inline-flex;align-items:center;gap:8px;background:var(--fg);color:var(--bg);padding:8px 18px;border-radius:6px;font-weight:600;font-size:.8rem;text-decoration:none;transition:opacity .2s}
-.gh-btn:hover{opacity:.85}
-.gh-btn svg{width:18px;height:18px}
+.nav-links .gh-btn{display:inline-flex;align-items:center;gap:8px;background:var(--fg);color:var(--bg);padding:8px 18px;border-radius:6px;font-weight:600;font-size:.8rem;text-decoration:none;transition:opacity .2s}
+.nav-links .gh-btn:hover{opacity:.85;color:var(--bg)}
+.nav-links .gh-btn svg{width:18px;height:18px}
 .theme-toggle{background:none;border:1px solid var(--border);color:var(--fg);width:36px;height:36px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .theme-toggle:hover{border-color:var(--fg)}
 .theme-toggle svg{width:18px;height:18px}
