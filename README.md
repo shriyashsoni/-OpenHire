@@ -1,93 +1,152 @@
-# OpenHire CLI 🚀
+<div align="center">
+  <br />
+  <a href="https://github.com/shriyashsoni/-OpenHire" target="_blank">
+    <img src="https://img.shields.io/badge/OpenHire-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="OpenHire Logo" />
+  </a>
+  <br />
+  <br />
 
-Build your startup's dedicated career page, complete with an ATS (Applicant Tracking System), an AI-assisted autofill application page, and a secure Admin Dashboard — in literally under 2 minutes.
+  <h1>OpenHire Platform Architecture</h1>
+  
+  <p>
+    An enterprise-grade, highly customizable, open-source Applicant Tracking System (ATS) and Career Portal designed specifically for modern startups.
+  </p>
 
-OpenHire is a fully open-source recruitment platform heavily inspired by leading ATS workflows. It provides everything you need out of the box.
-
-## 🌟 Features Included Out-of-the-Box
-1. **Dynamic Public Career Page**: Showcase your company benefits and list all open roles. Matches your brand color and identity automatically.
-2. **AI-Powered Job Application Page**: Built-in PDF parsing that magically reads a candidate's resume and auto-fills their application.
-3. **Secure Admin Dashboard**: Create jobs, manage custom application questions (with logic branching), review applications, and track visits.
-4. **Dynamic SEO & Social Sharing**: Every job has unique meta tags so when you share links on Twitter/LinkedIn, the preview cards look perfect.
-5. **Serverless Backend via Convex**: Securely stores resumes, applications, and job schemas in a fast, real-time database.
+  <p>
+    <a href="https://github.com/shriyashsoni/-OpenHire/stargazers"><img src="https://img.shields.io/github/stars/shriyashsoni/-OpenHire?style=for-the-badge&color=e3b341&logo=github" alt="Stars"></a>
+    <a href="https://github.com/shriyashsoni/-OpenHire/network/members"><img src="https://img.shields.io/github/forks/shriyashsoni/-OpenHire?style=for-the-badge&color=347d39&logo=github" alt="Forks"></a>
+    <a href="https://github.com/shriyashsoni/-OpenHire/issues"><img src="https://img.shields.io/github/issues/shriyashsoni/-OpenHire?style=for-the-badge&color=d84b3e&logo=github" alt="Issues"></a>
+    <img src="https://img.shields.io/badge/Convex-Backend-ff5722?style=for-the-badge&logo=convex" alt="Convex Backend">
+    <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License">
+  </p>
+  
+  <p><i>If you find this project useful, please consider giving it a ⭐ to show your support!</i></p>
+</div>
 
 ---
 
-## 🛠️ Installation Guide
+## 🎯 System Overview
 
-Follow these steps to generate and deploy your own HR platform.
+**OpenHire** was built to solve a critical problem for founders: spinning up a beautiful, SEO-optimized, fully functional careers page and ATS without spending hundreds of dollars on third-party SaaS tools. With a single CLI command, you can deploy a customized HR portal seamlessly integrated with your brand identity and a real-time Convex backend.
 
-### Step 1: Run the CLI
-In your terminal, navigate to the folder where you want to create your platform and run the CLI tool:
+### 🏗️ High-Level System Architecture
+
+The entire platform is built with a serverless, decoupled architecture ensuring extreme speed and infinite scalability.
+
+```mermaid
+graph TD
+    %% Core Users
+    Candidate([Candidate / User])
+    Admin([HR / Founder Admin])
+    
+    %% Frontend Elements
+    subgraph Frontend [Client-Side Interface]
+        CP[Public Career Portal]
+        AI[AI Application Autofill]
+        DB[Admin Dashboard]
+    end
+    
+    %% Backend & Database (Convex)
+    subgraph Backend [Convex Serverless Backend]
+        API[Real-time API Layer]
+        Storage[(File Storage : Resumes)]
+        DB_Jobs[(Jobs Table)]
+        DB_Apps[(Applications Table)]
+        Analytics[(Traffic Analytics)]
+    end
+    
+    %% Connections
+    Candidate -->|Browses Jobs| CP
+    Candidate -->|Uploads Resume| AI
+    AI -->|Parses Data| API
+    
+    Admin -->|Creates Jobs & Forms| DB
+    Admin -->|Reviews Candidates| DB
+    
+    CP <-->|Fetch Real-time Data| API
+    DB <-->|CRUD Operations| API
+    
+    API <--> Storage
+    API <--> DB_Jobs
+    API <--> DB_Apps
+    API <--> Analytics
+```
+
+---
+
+## ✨ Enterprise-Grade Features
+
+<img align="right" src="https://img.shields.io/badge/Features-Highlighted-blueviolet?style=for-the-badge" alt="Features">
+
+*   **1-Click CLI Scaffolding**: Enter your brand Hex code, URLs, and company name, and the CLI will instantly re-theme the entire platform to match your startup.
+*   **AI-Powered Parsing**: Candidates can upload PDF resumes, and the client-side parser will automatically map their experience to your custom questions.
+*   **Dynamic Custom Question Logic**: Create dynamic application questions through the Admin portal. Support for long answers, multiple choice, conditional logic, checkboxes, and file uploads.
+*   **Automated SEO & Social Graph**: Dynamic metadata tagging ensures that when a job is shared on LinkedIn, Discord, or X (Twitter), the exact job title, location, and company branding render perfectly.
+*   **Out-of-the-Box Legal**: Automatically generates standard `Privacy Policy` and `Terms & Conditions` tailored to your company details.
+*   **Real-time Admin Dashboard**: Track visit analytics, review applicants in a Kanban-style workflow, and download applicant resumes with zero backend config required.
+
+---
+
+## 🚀 Quick Start Guide
+
+Transform your recruitment pipeline in under 3 minutes.
+
+### 1. Scaffold Your Platform
+Open your terminal and run the interactive SDK:
+
 ```bash
 npx create-open-hire
 ```
-*(If you have cloned this repo locally, run `node cli.js` instead).*
+*The CLI will ask for your **Company Name**, **Website URL**, and **Brand Color**. It will inject these across the entire architecture.*
 
-The interactive CLI will ask you for:
-- **Project Name** (e.g., \`my-career-page\`)
-- **Company Name** (e.g., \`TechStartup Inc\`)
-- **Website URL** (e.g., \`https://techstartup.com\`)
-- **Primary Brand Color Hex** (e.g., \`#1A73E8\`)
-- **Support Email** (e.g., \`careers@techstartup.com\`)
-
-The CLI will instantly scaffold your project and inject your brand identity (names, colors, URLs) across the entire platform, including your auto-generated Privacy Policy!
-
-### Step 2: Install Dependencies
-Navigate into your newly created folder and install the required npm packages:
+### 2. Install Dependencies
 ```bash
-cd my-career-page
+cd <your-project-name>
 npm install
 ```
 
-### Step 3: Setup your Convex Database (Backend)
-OpenHire runs entirely on [Convex](https://convex.dev/) as its serverless backend. Setting it up is free and instantaneous.
+### 3. Initialize the Convex Backend
+OpenHire leverages Convex for real-time state and database management.
 
-Run the following command:
 ```bash
 npx convex dev
 ```
-1. It will prompt you to log into Convex (via GitHub or email).
-2. It will ask you to configure a project. Just hit **Enter** to accept the defaults.
-3. Convex will automatically upload the backend schema (`convex/schema.ts`) and create your database tables!
-4. Keep this terminal window open; it syncs your backend in real-time.
+*(Press **Enter** to authenticate and authorize the creation of your database schema. Leave this terminal running to sync real-time changes).*
 
-### Step 4: Run the Local Frontend Server
-Open a **new** terminal window (keep the Convex one running), navigate to your project directory, and start the frontend:
-```bash
-npm run dev
-```
-You can now visit your brand new HR platform at \`http://localhost:5173\`!
+### 4. Seed the Admin User
+In a **new terminal tab**, generate your default administrator credentials to access the secure backend:
 
----
-
-## 🔐 Setting up the Admin Dashboard
-By default, the platform includes a hidden Admin Dashboard located at `/admin.html` (e.g., `http://localhost:5173/admin.html`).
-
-### Generating your first Admin User
-Before you can log in, you need to seed the database with an admin account.
-In your terminal, run:
 ```bash
 npx convex run seed:createDefaultAdmin
 ```
-This script will create a default admin using your company email as the username. 
-*(If you want to customize the username and password, you can edit the \`convex/seed.ts\` file before running it).*
+*(You can modify default passwords by editing `convex/seed.ts` before running this command).*
 
-Once created, go to `/admin.html` on your site and log in to start creating jobs!
+### 5. Launch the Portal
+```bash
+npm run dev
+```
+Navigate to `http://localhost:5173`. 
+To access the backend management portal, navigate to `http://localhost:5173/admin.html` and log in with your generated admin credentials.
 
 ---
 
-## 🌐 Deployment
+## 👨‍💻 Created & Maintained By
 
-Deploying your OpenHire platform is incredibly easy.
+<div align="center">
+  <img src="https://img.shields.io/badge/Architect-Shriyash_Soni-1a73e8?style=for-the-badge" alt="Shriyash Soni">
+  <br /><br />
+  <b>Shriyash Soni</b>
+  <p>AI Developer, Architect, & Open-Source Contributor</p>
+  <a href="https://github.com/shriyashsoni"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" /></a>
+  <a href="https://linkedin.com/in/shriyashsoni"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
+</div>
 
-1. **Backend**: Run \`npx convex deploy\` to push your database schema to production. This will give you a production Convex URL.
-2. **Frontend**: Create a `.env.local` file and add:
-   \`\`\`
-   VITE_CONVEX_URL=your_production_convex_url
-   \`\`\`
-3. Push your repository to GitHub.
-4. Import your repository into **Vercel** or **Netlify**. Ensure you add the `VITE_CONVEX_URL` environment variable in their dashboard settings.
-5. Hit deploy!
+> *"I built OpenHire because I believe founders shouldn't have to sacrifice branding or spend hours configuring clunky third-party recruitment software just to hire their founding team. OpenHire is my contribution to the startup ecosystem—an ATS built by a builder, for builders."* — **Shriyash Soni**
 
-Your startup now has a world-class, professional career portal. Happy hiring! 🚀
+---
+
+## 🤝 Contributing & Support
+
+Contributions, issues, and feature requests are highly encouraged! Feel free to check the [issues page](https://github.com/shriyashsoni/-OpenHire/issues). 
+
+### Don't forget to leave a ⭐ if you found this project helpful! It helps the platform reach more founders.
