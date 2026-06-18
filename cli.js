@@ -221,7 +221,7 @@ async function run(projectDirectory, options) {
     console.log(chalk.cyan(`  npm install`));
     console.log(chalk.cyan(`  npx convex dev`));
     console.log(chalk.cyan(`  npm run dev`));
-    console.log(`\n${chalk.yellow('Important: Don\\'t forget to replace the logo.jpg, logo.png, and logo.svg files with your own company logo!')}\n`);
+    console.log(`\n${chalk.yellow("Important: Don't forget to replace the logo.jpg, logo.png, and logo.svg files with your own company logo!")}\n`);
 
   } catch (err) {
     spinner.fail('Failed to setup HR Platform');
