@@ -1,0 +1,28 @@
+{
+  "name": "create-open-hire",
+  "version": "1.0.0",
+  "description": "A CLI to set up a modern HR platform for startups",
+  "main": "cli.js",
+  "bin": {
+    "create-open-hire": "cli.js"
+  },
+  "scripts": {
+    "start": "node cli.js"
+  },
+  "keywords": [
+    "hr",
+    "startup",
+    "founder",
+    "careers",
+    "convex"
+  ],
+  "author": "Shriyash Soni",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.0.0",
+    "fs-extra": "^11.1.1",
+    "inquirer": "^8.2.5",
+    "ora": "^5.4.1"
+  }
+}

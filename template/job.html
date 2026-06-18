@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application | OpenHire</title>
+    <meta name="description" content="Apply for a position at OpenHire and help us democratize expert career guidance.">
+    <meta name="keywords" content="OpenHire, job application, hiring, careers, apply now">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta id="og-url" property="og:url" content="https://www.OpenHire.in/">
+    <meta id="og-title" property="og:title" content="Job Application | OpenHire">
+    <meta id="og-desc" property="og:description" content="Apply for a position at OpenHire and help us democratize expert career guidance.">
+    <meta property="og:image" content="https://www.OpenHire.in/logo.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta id="tw-url" property="twitter:url" content="https://www.OpenHire.in/">
+    <meta id="tw-title" property="twitter:title" content="Job Application | OpenHire">
+    <meta id="tw-desc" property="twitter:description" content="Apply for a position at OpenHire and help us democratize expert career guidance.">
+    <meta property="twitter:image" content="https://www.OpenHire.in/logo.jpg">
+    
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Choices.js for advanced autocomplete -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Intl Tel Input -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/css/intlTelInput.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.2.1/js/intlTelInput.min.js"></script>
+    <style>
+        .job-detail-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .job-header {
+            margin-bottom: 40px;
+        }
+        .back-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .job-title {
+            font-size: 2.5rem;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+        .job-location {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+        .job-description {
+            font-family: var(--font-sans);
+            line-height: 1.8;
+            color: var(--text-main);
+            margin-bottom: 60px;
+        }
+        .job-description h2 {
+            font-family: var(--font-serif);
+            margin-top: 40px;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        .job-description ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        .job-description li {
+            margin-bottom: 10px;
+        }
+        .apply-container {
+            border-top: 1px solid var(--border-color);
+            padding-top: 40px;
+        }
+        .apply-container h2 {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .form-group input[type="file"] {
+            margin-top: 5px;
+        }
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        .required {
+            color: #d93025;
+        }
+        #apply-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+        #success-message {
+            display: none;
+            background-color: #e6f4ea;
+            color: #1e8e3e;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo">
+                <img src="logo.jpg" alt="OpenHire Logo" class="brand-logo">
+            </a>
+            <div class="mobile-menu-btn" id="mobile-menu-btn" style="display: none;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </div>
+            <div class="nav-links" id="nav-links">
+                <a href="https://www.OpenHire.in/">Main Website</a>
+                <a href="https://www.OpenHire.in/about">About</a>
+                <a href="/#jobs">Jobs</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="job-detail-container">
+        <div class="job-header">
+            <a href="/" class="back-link">← Back to jobs</a>
+            <h1 class="job-title" id="job-title">Loading Job...</h1>
+            <p class="job-location" id="job-location">Remote / India</p>
+        </div>
+
+        <div class="job-description" id="job-description">
+            <!-- Will be populated dynamically -->
+            <p>Loading description...</p>
+        </div>
+
+        <div class="apply-container" id="apply-section">
+            <h2>Apply for this job</h2>
+            
+            <!-- AI Autofill Section -->
+            <div style="background: linear-gradient(135deg, #f0f7ff, #e6f0fa); border: 2px dashed #a3c4f3; border-radius: 12px; padding: 25px; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; transition: all 0.3s ease;">
+                <div style="flex: 1; min-width: 250px;">
+                    <h3 style="margin-bottom: 8px; font-size: 1.2rem; color: #1a73e8; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="wand-2" style="width: 20px; height: 20px;"></i> AI Magic Autofill
+                    </h3>
+                    <p style="font-size: 0.95rem; color: #555; margin: 0; line-height: 1.4;">Skip the typing! Upload your PDF resume and our AI will instantly read it and fill out this application for you.</p>
+                </div>
+                <div>
+                    <input type="file" id="ai-resume-upload" accept="application/pdf" style="display: none;">
+                    <button type="button" id="trigger-ai-autofill" style="background: #1a73e8; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1rem; display: flex; align-items: center; gap: 10px; transition: background 0.3s ease; box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);">
+                        <i data-lucide="file-text" style="width: 18px; height: 18px;"></i> Upload Resume (PDF)
+                    </button>
+                </div>
+            </div>
+
+            <p style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-muted);"><span class="required">*</span> indicates a required field</p>
+            
+            <form id="application-form" novalidate>
+
+
+                <div id="custom-questions-container"></div>
+
+                <button type="submit" class="btn btn-primary" id="apply-btn">Submit Application</button>
+            </form>
+            
+            <div id="success-message">
+                <h3>Application Submitted!</h3>
+                <p>We've received your resume and sent a confirmation email to your inbox.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container footer-container" style="justify-content: center; text-align: center; border: none; padding-top: 40px;">
+            <p>&copy; 2026 OpenHire. Powered by Convex.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="/job-apply.js"></script>
+</body>
+</html>

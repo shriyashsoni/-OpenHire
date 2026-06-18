@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - OpenHire</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        #login-section {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-card);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        #dashboard-section {
+            display: none;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+        }
+        .tab.active {
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th, .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .data-table th {
+            font-weight: 600;
+            background-color: var(--bg-main);
+        }
+        #error-msg {
+            color: red;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .badge.new { background: #e3f2fd; color: #1565c0; }
+        .badge.interview { background: #e8f5e9; color: #2e7d32; }
+        .badge.rejected { background: #ffebee; color: #c62828; }
+        
+        .action-btn {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .btn-advance { background: var(--primary); color: white; }
+        .btn-reject { background: #f44336; color: white; }
+        .btn-delete { background: #9e9e9e; color: white; }
+
+        .ai-builder {
+            background: #f8f9fa;
+            border: 1px dashed var(--primary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .ai-builder textarea {
+            width: 100%;
+            height: 80px;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        .job-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .job-form .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Tally-Like Builder Styles */
+        .form-builder {
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            background: #fff;
+            margin-bottom: 20px;
+            min-height: 400px;
+            position: relative;
+        }
+        
+        #form-builder-canvas {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .insert-block-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 6px;
+            transition: background 0.2s;
+            width: fit-content;
+        }
+        .insert-block-btn:hover {
+            background: #f0f0f0;
+        }
+        .insert-block-btn .plus-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            color: #555;
+        }
+
+        /* Tally Popover Modal */
+        .tally-popover {
+            display: none;
+            position: absolute;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            width: 320px;
+            max-height: 400px;
+            z-index: 1000;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .tally-popover.active {
+            display: flex;
+        }
+        .tally-search {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .tally-search input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 0.95rem;
+        }
+        .tally-blocks-list {
+            overflow-y: auto;
+            padding: 10px 0;
+            flex-grow: 1;
+        }
+        .tally-group-label {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            padding: 5px 15px;
+            font-weight: 600;
+        }
+        .tally-block-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .tally-block-item:hover {
+            background: #f5f5f5;
+        }
+        .tally-block-item svg {
+            width: 18px;
+            height: 18px;
+            color: #666;
+        }
+        .tally-block-item span {
+            font-size: 0.9rem;
+            color: #333;
+        }
+        .field-block {
+            position: relative;
+            background: transparent;
+            padding: 5px 0 5px 40px; /* Space for the left margin actions */
+            border-radius: 4px;
+            transition: background 0.2s;
+            margin-bottom: 5px;
+        }
+        .field-block:hover {
+            background: #fcfcfc;
+        }
+        
+        .block-actions-margin {
+            position: absolute;
+            left: 0;
+            top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .field-block:hover .block-actions-margin {
+            opacity: 1;
+        }
+
+        .margin-btn {
+            background: none;
+            border: none;
+            color: #b0b0b0;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .margin-btn:hover {
+            background: #eaeaea;
+            color: #555;
+        }
+
+        .tally-option-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .tally-option-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #666;
+            font-weight: 600;
+        }
+        .tally-option-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        .tally-option-input:focus {
+            border-bottom: 1px solid #1a73e8;
+        }
+        .tally-inline-placeholder {
+            border: none;
+            background: #fafafa;
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            color: #888;
+            outline: none;
+        }
+        .tally-inline-placeholder:focus {
+            background: #f0f4f8;
+            color: #333;
+        }
+    </style>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo">
+                <img src="logo.jpg" alt="OpenHire Logo" class="brand-logo">
+            </a>
+            <div class="mobile-menu-btn" id="mobile-menu-btn">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </div>
+            <div class="nav-links" id="nav-links">
+                <span id="admin-email-display" style="font-weight: 600; color: var(--primary);"></span>
+                <a href="#" id="logout-btn" style="display: none;" class="btn btn-outline">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <!-- Login Section -->
+        <div id="login-section">
+            <h2 style="margin-bottom: 20px;">Admin Login</h2>
+            <div id="error-msg">Invalid email or password.</div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login to Dashboard</button>
+            </form>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section">
+            <div class="admin-header">
+                <h1>ATS Dashboard</h1>
+                <div>
+                    <span id="total-visits" style="margin-right: 20px;">Visits: Loading...</span>
+                    <button class="btn btn-primary" id="new-job-btn">+ Post New Job</button>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" data-tab="applications">Applications Tracker</div>
+                <div class="tab" data-tab="jobs">Manage Jobs</div>
+                <div class="tab" data-tab="create-job">✨ AI Job Creator</div>
+                <div class="tab" data-tab="admins">Manage Admins</div>
+            </div>
+
+            <div class="tab-content active" id="tab-applications">
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Applicant Name</th>
+                                <th>Status</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Actions (Auto-Email)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applications-table-body">
+                            <tr><td colspan="5">Loading applications...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-jobs">
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Department</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Analytics</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jobs-table-body">
+                            <tr><td colspan="6">Loading jobs...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Analytics Modal -->
+            <div id="analytics-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+                <div style="background: white; padding: 30px; border-radius: 8px; max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 id="analytics-modal-title">Job Analytics & Applications</h2>
+                        <button id="close-analytics-modal" class="btn btn-outline" style="padding: 5px 10px;">X</button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold; color: var(--primary);" id="analytics-views">0</div>
+                            <div style="color: #666; font-size: 0.9rem;">Page Views</div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #34a853;" id="analytics-applications">0</div>
+                            <div style="color: #666; font-size: 0.9rem;">Applications Submitted</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee;">Applications for this Job</h3>
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Applicant Name</th>
+                                    <th>Status</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Actions (Auto-Email)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="analytics-applications-body">
+                                <tr><td colspan="5">Loading applications...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Details Modal -->
+            <div id="application-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+                <div style="background: white; padding: 30px; border-radius: 8px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 id="app-modal-title">Application Details</h2>
+                        <button id="close-app-modal" class="btn btn-outline" style="padding: 5px 10px;">X</button>
+                    </div>
+                    <div id="app-modal-content" style="line-height: 1.6;">
+                        <!-- Details injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-create-job">
+
+
+                <form id="create-job-form" class="job-form">
+                    <div class="form-group">
+                        <label>Job Title</label>
+                        <input type="text" id="job-title-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Department</label>
+                        <input type="text" id="job-dept-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" id="job-loc-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Employment Type</label>
+                        <input type="text" id="job-type-input" value="Full-time" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Comprehensive Description (HTML/Markdown supported)</label>
+                        <textarea id="job-desc-input" style="height: 300px;" required></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <div class="form-builder">
+                            <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                                <i data-lucide="layout-template"></i> Custom Form Architecture
+                            </h3>
+                            <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">Construct a comprehensive application form. Click any block below to inject it into the job application format.</p>
+                            <div id="form-builder-canvas">
+                                <!-- Dynamic fields will be injected here -->
+                            </div>
+
+                            <div class="insert-block-btn" id="open-tally-btn">
+                                <div class="plus-icon"><i data-lucide="plus" style="width: 14px;"></i></div>
+                                <span>Type '/' to insert blocks or click to add</span>
+                            </div>
+
+                            <div style="margin-top: 30px; padding: 15px; border-top: 1px solid #eaeaea; display: flex; justify-content: flex-start;">
+                                <button type="button" disabled style="background: var(--primary-color); color: white; border: none; border-radius: 6px; padding: 10px 24px; font-weight: 600; cursor: not-allowed; opacity: 0.8;">Submit Application</button>
+                                <span style="margin-left: 15px; color: #888; font-size: 0.85rem; display: flex; align-items: center;">(Permanent button visible to candidates)</span>
+                            </div>
+
+                            <!-- Tally Popover Modal -->
+                            <div class="tally-popover" id="tally-popover">
+                                <div class="tally-search">
+                                    <input type="text" id="tally-search-input" placeholder="Find questions, input fields and layout options...">
+                                </div>
+                                <div class="tally-blocks-list" id="tally-blocks-list">
+                                    <div class="tally-group-label">Input blocks</div>
+                                    <div class="tally-block-item" data-type="short_answer"><i data-lucide="minus"></i> <span>Short answer</span></div>
+                                    <div class="tally-block-item" data-type="long_answer"><i data-lucide="menu"></i> <span>Long answer</span></div>
+                                    <div class="tally-block-item" data-type="multiple_choice"><i data-lucide="check-circle-2"></i> <span>Multiple choice</span></div>
+                                    <div class="tally-block-item" data-type="checkboxes"><i data-lucide="check-square"></i> <span>Checkboxes</span></div>
+                                    <div class="tally-block-item" data-type="dropdown"><i data-lucide="chevron-down-square"></i> <span>Dropdown</span></div>
+                                    <div class="tally-block-item" data-type="multi_select"><i data-lucide="list-checks"></i> <span>Multi-select</span></div>
+                                    <div class="tally-block-item" data-type="number"><i data-lucide="hash"></i> <span>Number</span></div>
+                                    <div class="tally-block-item" data-type="email"><i data-lucide="at-sign"></i> <span>Email</span></div>
+                                    <div class="tally-block-item" data-type="phone"><i data-lucide="phone"></i> <span>Phone number</span></div>
+                                    <div class="tally-block-item" data-type="link"><i data-lucide="link"></i> <span>Link</span></div>
+                                    <div class="tally-block-item" data-type="file_upload"><i data-lucide="upload"></i> <span>File upload</span></div>
+                                    <div class="tally-block-item" data-type="date"><i data-lucide="calendar"></i> <span>Date</span></div>
+                                    <div class="tally-block-item" data-type="time"><i data-lucide="clock"></i> <span>Time</span></div>
+                                    <div class="tally-block-item" data-type="linear_scale"><i data-lucide="more-horizontal"></i> <span>Linear scale</span></div>
+                                    <div class="tally-block-item" data-type="matrix"><i data-lucide="grid"></i> <span>Matrix</span></div>
+                                    <div class="tally-block-item" data-type="rating"><i data-lucide="star"></i> <span>Rating</span></div>
+                                    <div class="tally-block-item" data-type="payment"><i data-lucide="credit-card"></i> <span>Payment</span></div>
+                                    <div class="tally-block-item" data-type="signature"><i data-lucide="pen-tool"></i> <span>Signature</span></div>
+                                    <div class="tally-block-item" data-type="ranking"><i data-lucide="award"></i> <span>Ranking</span></div>
+                                    <div class="tally-block-item" data-type="wallet_connect"><i data-lucide="wallet"></i> <span>Wallet Connect</span></div>
+                                    
+                                    <div class="tally-group-label" style="margin-top: 10px;">Layout blocks</div>
+                                    <div class="tally-block-item" data-type="new_page"><i data-lucide="file-plus"></i> <span>New page</span></div>
+                                    <div class="tally-block-item" data-type="thank_you_page"><i data-lucide="smile"></i> <span>'Thank you' page</span></div>
+                                    <div class="tally-block-item" data-type="text"><i data-lucide="type"></i> <span>Text</span></div>
+                                    <div class="tally-block-item" data-type="heading_1"><i data-lucide="heading-1"></i> <span>Heading 1</span></div>
+                                    <div class="tally-block-item" data-type="heading_2"><i data-lucide="heading-2"></i> <span>Heading 2</span></div>
+                                    <div class="tally-block-item" data-type="heading_3"><i data-lucide="heading-3"></i> <span>Heading 3</span></div>
+                                    <div class="tally-block-item" data-type="divider"><i data-lucide="minus"></i> <span>Divider</span></div>
+                                    <div class="tally-block-item" data-type="title"><i data-lucide="bookmark"></i> <span>Title</span></div>
+                                    <div class="tally-block-item" data-type="label"><i data-lucide="tag"></i> <span>Label</span></div>
+
+                                    <div class="tally-group-label" style="margin-top: 10px;">Embed blocks</div>
+                                    <div class="tally-block-item" data-type="image"><i data-lucide="image"></i> <span>Image</span></div>
+                                    <div class="tally-block-item" data-type="video"><i data-lucide="film"></i> <span>Video</span></div>
+                                    <div class="tally-block-item" data-type="audio"><i data-lucide="volume-2"></i> <span>Audio</span></div>
+                                    <div class="tally-block-item" data-type="embed"><i data-lucide="code"></i> <span>Embed anything</span></div>
+
+                                    <div class="tally-group-label" style="margin-top: 10px;">Advanced blocks</div>
+                                    <div class="tally-block-item" data-type="conditional_logic"><i data-lucide="git-branch"></i> <span>Conditional logic</span></div>
+                                    <div class="tally-block-item" data-type="calculated_fields"><i data-lucide="calculator"></i> <span>Calculated fields</span></div>
+                                    <div class="tally-block-item" data-type="hidden_fields"><i data-lucide="eye-off"></i> <span>Hidden fields</span></div>
+                                    <div class="tally-block-item" data-type="recaptcha"><i data-lucide="shield-check"></i> <span>reCAPTCHA</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <button type="submit" id="submit-job-btn" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;">
+                            <i data-lucide="rocket"></i> <span id="submit-job-text">Publish Comprehensive Job Live</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="tab-content" id="tab-admins">
+                <div class="admin-header" style="margin-bottom: 20px;">
+                    <h3>Administrator Accounts</h3>
+                </div>
+                
+                <form id="create-admin-form" style="display: flex; gap: 10px; margin-bottom: 30px; background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <div class="form-group" style="flex: 1; margin: 0;">
+                        <input type="email" id="new-admin-email" placeholder="New Admin Email" required style="width: 100%;">
+                    </div>
+                    <div class="form-group" style="flex: 1; margin: 0;">
+                        <input type="password" id="new-admin-password" placeholder="Temporary Password" required style="width: 100%;">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Admin</button>
+                </form>
+
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Email (Username)</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admins-table-body">
+                            <tr><td colspan="3">Loading admins...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals for creating job would go here -->
+
+    <script type="module" src="/admin.js"></script>
+</body>
+</html>
